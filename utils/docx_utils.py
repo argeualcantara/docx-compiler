@@ -86,4 +86,15 @@ class DocxUtils:
                         temp_img_path.unlink()
 
     def generate_new_doc(self) -> Document:
+        """
+        Create and return a new, empty Word document.
+
+        Returns:
+            Document: A new instance of a python-docx Document object.
+
+        Example:
+            doc = self.generate_new_doc()
+            doc.add_paragraph("Hello, World!")
+            doc.save("example.docx")
+        """
         return Document()
