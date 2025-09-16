@@ -1,6 +1,6 @@
-from pathlib import Path
-from docx import Document
 import sys
+from pathlib import Path
+
 sys.path.append(str(Path(__file__).resolve().parent))
 
 from utils.docx_utils import DocxUtils
@@ -64,7 +64,7 @@ class DocCompiler:
 
         links = docx_utils.extrac_links_from_doc_per_line(origem)
         print(f"{len(links)} links found.")
-        compiled_doc = Document()
+        compiled_doc = docx_utils.generate_new_doc()
         compiled_doc.add_heading("Compiled document", level=1)
 
         for idx, link in enumerate(links, start=1):

@@ -84,3 +84,6 @@ class DocxUtils:
                         # Insere imagem no documento destino
                         dest_doc.add_picture(str(temp_img_path), width=Cm(12))
                         temp_img_path.unlink()
+
+    def generate_new_doc(self) -> Document:
+        return Document()

@@ -1,6 +1,5 @@
 import re
 import requests
-from docx import Document
 from pathlib import Path
 from .document_handler_interface import DocumentHandler
 
