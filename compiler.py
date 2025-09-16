@@ -1,8 +1,5 @@
 import sys
 from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parent))
-
 from utils.docx_utils import DocxUtils
 from doc_handlers.google_docs_handler import GoogleDocsHandler
 from doc_handlers.document_handler_interface import DocumentHandler
