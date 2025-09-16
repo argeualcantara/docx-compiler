@@ -6,20 +6,26 @@ class DocxUtils:
     def __init__(self):
         pass
 
-    def extrair_hyperlinks_por_linha(self, docx_path: Path) -> list[str]:
+    def extrac_links_from_doc_per_line(self, docx_path: Path) -> list[str]:
         """
-        Extrai todos os hyperlinks do DOCX, na ordem em que aparecem no documento.
-        Retorna uma lista de URLs.
+        Extract all hyperlinks from a DOCX file in the order they appear.
+
+        Args:
+            docx_path (Path): Path to the source DOCX file.
+
+        Returns:
+            list[str]: List of URLs corresponding to the hyperlinks found in the document.
+        
+        Example:
+            urls = self.extrac_links_from_doc_per_line(Path("source.docx"))
+            print(urls)  # ['https://example.com', 'https://another.com']
         """
         doc = Document(docx_path)
         urls = []
 
-        # Mapeia todas as relações do tipo hyperlink
         rel_dict = {rel.rId: rel.target_ref for rel in doc.part.rels.values() if "hyperlink" in rel.reltype}
 
-        # Percorre cada parágrafo
         for line in doc.paragraphs:
-            # Cada hyperlink no XML do parágrafo
             for hyperlink in line._p.findall('.//w:hyperlink', doc.part._element.nsmap):
                 rId = hyperlink.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
                 if rId and rId in rel_dict:
@@ -27,7 +33,25 @@ class DocxUtils:
 
         return urls
 
-    def copiar_docx_com_imagens(self, src_path: Path, dest_doc: Document):
+    def copy_docx_with_pictures(self, src_path: Path, dest_doc: Document):
+        """
+        Copy the content of a DOCX file to another DOCX document, preserving text formatting and inline images.
+
+        Args:
+            src_path (Path): Path to the source DOCX file.
+            dest_doc (Document): A python-docx Document object where the content will be copied.
+
+        Behavior:
+            - Copies all paragraphs from the source document to the destination.
+            - Preserves text formatting (bold, italic, underline, font size, font name).
+            - Copies inline images from the source document and inserts them into the destination.
+            - Temporarily saves images to insert them, then deletes the temporary files.
+
+        Example:
+            dest_doc = Document()
+            copy_docx_with_pictures(Path("source.docx"), dest_doc)
+            dest_doc.save("compiled.docx")
+        """
         src_doc = Document(src_path)
 
         for line in src_doc.paragraphs:
@@ -36,7 +60,7 @@ class DocxUtils:
 
             # Copia runs
             for run in line.runs:
-                new_run = new_line.add_run(run.text)
+                new_run = new_para.add_run(run.text)
                 new_run.bold = run.bold
                 new_run.italic = run.italic
                 new_run.underline = run.underline
